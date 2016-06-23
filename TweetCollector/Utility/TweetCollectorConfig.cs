@@ -4,7 +4,7 @@ using System.IO;
 
 namespace TweetCollector.Utility
 {
-    public class TweetCollectorConfig
+    public class TweetCollectorConfig : ITweetCollectorConfig
     {
         readonly Configuration _config;
 

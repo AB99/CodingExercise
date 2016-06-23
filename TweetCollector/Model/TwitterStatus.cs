@@ -9,7 +9,7 @@ namespace TweetCollector.Model
     [JsonObject(MemberSerialization.OptIn)]
     [DebuggerDisplay("{User.ScreenName}/{Text}")]
     [DataContract]
-    public class BlarghTwitterStatus
+    public class TwitterStatus
     {
         [DataMember, JsonProperty(PropertyName = "id")]
         public decimal Id { get; set; }
@@ -17,7 +17,7 @@ namespace TweetCollector.Model
         [DataMember]
         [JsonProperty(PropertyName = "created_at")]
         [JsonConverter(typeof(TwitterDateTimeConverter))]
-        public DateTime CreatedDate { get; set; }
+        public DateTimeOffset CreatedDateGmt { get; set; }
 
         [DataMember, JsonProperty(PropertyName = "source")]
         public string Source { get; set; }
