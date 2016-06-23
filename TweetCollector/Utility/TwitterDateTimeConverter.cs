@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Globalization;
 
-namespace TweetCollector
+namespace TweetCollector.Utility
 {
-    /// <summary>
-    /// Converts date strings returned by the Twitter API into <see cref="System.DateTime"/>
-    /// </summary>
     public class TwitterDateTimeConverter : Newtonsoft.Json.Converters.DateTimeConverterBase
     {
         /// <summary>
@@ -13,41 +10,26 @@ namespace TweetCollector
         /// </summary>
         protected const string DateFormat = "ddd MMM dd HH:mm:ss zz00 yyyy";
 
-        /// <summary>
-        /// Reads the json.
-        /// </summary>
-        /// <param name="reader">The reader.</param>
-        /// <param name="objectType">Type of the object.</param>
-        /// <param name="existingValue">The existing value.</param>
-        /// <param name="serializer">The serializer.</param>
-        /// <returns>The parsed value as a DateTime, or null.</returns>
-        public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue, Newtonsoft.Json.JsonSerializer serializer)
+        public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue,
+            Newtonsoft.Json.JsonSerializer serializer)
         {
-            if (reader.Value == null || reader.Value.GetType() != typeof(string))
-                return new DateTime();
+            if (reader.Value == null)
+                return new ArgumentException(nameof(reader) + ".Value is null", nameof(reader));
 
-            DateTime parsedDate;
+            if (reader.Value.GetType() != typeof (string))
+                return new ArgumentException(nameof(reader) + ".Value is not a string", nameof(reader));
 
-            return DateTime.TryParseExact(
-                (string)reader.Value,
-                DateFormat,
-                CultureInfo.InvariantCulture,
-                DateTimeStyles.None,
-                out parsedDate) ? parsedDate : new DateTime();
+            var dateTimeOffset = DateTimeOffset.ParseExact((string) reader.Value, DateFormat, new CultureInfo("en-US"));
+            return dateTimeOffset;
         }
 
-        /// <summary>
-        /// Writes the json.
-        /// </summary>
-        /// <param name="writer">The writer.</param>
-        /// <param name="value">The value.</param>
-        /// <param name="serializer">The serializer.</param>
-        public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value, Newtonsoft.Json.JsonSerializer serializer)
+        public override void WriteJson(Newtonsoft.Json.JsonWriter writer, object value,
+            Newtonsoft.Json.JsonSerializer serializer)
         {
-            if (value.GetType() != typeof(DateTime))
-                throw new ArgumentOutOfRangeException("value", "The value provided was not the expected data type.");
+            if (value.GetType() != typeof (DateTimeOffset))
+                throw new ArgumentException(nameof(value) + " is not a DateTimeOffset", nameof(value));
 
-            writer.WriteValue(((DateTime)value).ToString(DateFormat, CultureInfo.InvariantCulture));
+            writer.WriteValue(((DateTimeOffset) value).ToString(DateFormat, CultureInfo.InvariantCulture));
         }
     }
 }

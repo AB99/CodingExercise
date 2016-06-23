@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
+using TweetCollector.Utility;
 
 namespace TweetCollector.Model
 {
