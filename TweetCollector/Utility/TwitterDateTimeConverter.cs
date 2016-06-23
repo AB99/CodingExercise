@@ -5,9 +5,6 @@ namespace TweetCollector.Utility
 {
     public class TwitterDateTimeConverter : Newtonsoft.Json.Converters.DateTimeConverterBase
     {
-        /// <summary>
-        /// The date pattern for most dates returned by the API
-        /// </summary>
         protected const string DateFormat = "ddd MMM dd HH:mm:ss zz00 yyyy";
 
         public override object ReadJson(Newtonsoft.Json.JsonReader reader, Type objectType, object existingValue,

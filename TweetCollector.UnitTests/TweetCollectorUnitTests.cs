@@ -12,18 +12,12 @@ namespace TweetCollector.UnitTests
     [TestFixture]
     public class TweetCollectorUnitTests
     {
-        private TweetCollector _tweetCollector;
         private Mock<ITwitterFacade> _mockTwitterFacade;
-
-        private ulong _tweetId;
-
+       
         [SetUp]
         public void SetUp()
         {
             _mockTwitterFacade = new Mock<ITwitterFacade>();
-            _tweetCollector = new TweetCollector(_mockTwitterFacade.Object);
-
-            _tweetId = 1;
         }
 
         [Test]
@@ -83,8 +77,6 @@ namespace TweetCollector.UnitTests
         [Test]
         public void CollectTweetsForLastTwoWeeks_TweetsInFirstPageOld_OnlyReternsMoreRecentTweets()
         {
-            //NB: in this case the first page contains a value that is past the cutoff date, so it 
-            //doesn't bother asking for further pages
             var tweets = new List<TwitterStatus>
             {
                 CreateTweet(4, Today.AddDays(-1)),
@@ -96,6 +88,8 @@ namespace TweetCollector.UnitTests
 
             var screenName = "someScreenName";
 
+            //NB: in this case the first page contains a value that is past the cutoff date, so it 
+            //doesn't bother asking for further pages
             _mockTwitterFacade.Setup(stf => stf.GetUserTimeLine(screenName))
                 .Returns(new List<TwitterStatus> { tweets[0], tweets[1] });
            
@@ -106,7 +100,6 @@ namespace TweetCollector.UnitTests
 
             TwitterAggregate result = tweetCollector.CollectTweetsForLastTwoWeeks();
 
-            _mockTwitterFacade.Verify(f => f.GetUserTimeLine(screenName));
             Assert.That(result.TweetCount, Is.EqualTo(1));
             Assert.That(result.Tweets[0], Is.EqualTo(tweets[0]));
         }
@@ -114,8 +107,6 @@ namespace TweetCollector.UnitTests
         [Test]
         public void CollectTweetsForLastTwoWeeks_TweetsInSecondPageOld_OnlyReternsMoreRecentTweets()
         {
-            //NB: in this case the second page contains a value that is past the cutoff date, so it 
-            //doesn't bother asking for further pages
             var tweets = new List<TwitterStatus>
             {
                 CreateTweet(4, Today.AddDays(-1)),
@@ -127,6 +118,8 @@ namespace TweetCollector.UnitTests
 
             var screenName = "someScreenName";
 
+            //NB: in this case the second page contains a value that is past the cutoff date, so it 
+            //doesn't bother asking for further pages
             _mockTwitterFacade.Setup(stf => stf.GetUserTimeLine(screenName))
                 .Returns(new List<TwitterStatus> { tweets[0], tweets[1] });
             _mockTwitterFacade.Setup(stf => stf.GetUserTimeLine(screenName, tweets[1].Id - 1))
@@ -139,7 +132,6 @@ namespace TweetCollector.UnitTests
 
             TwitterAggregate result = tweetCollector.CollectTweetsForLastTwoWeeks();
 
-            _mockTwitterFacade.Verify(f => f.GetUserTimeLine(screenName));
             Assert.That(result.TweetCount, Is.EqualTo(3));
             Assert.That(result.Tweets, Contains.Item(tweets[0]));
             Assert.That(result.Tweets, Contains.Item(tweets[1]));
@@ -243,6 +235,7 @@ namespace TweetCollector.UnitTests
             Assert.That(result.Tweets, Is.EqualTo(tweets.OrderByDescending(t => t.CreatedDateGmt)));
         }
 
+        #region helpers
 
         private static DateTimeOffset Today => DateTimeOffset.UtcNow;
 
@@ -274,28 +267,6 @@ namespace TweetCollector.UnitTests
             return stubTwitterFacade.Object;
         }
 
+        #endregion helpers
     }
-
-    //public static class TestUtils
-    //{
-    //    public static List<T> AsList<T>(this T obj)
-    //    {
-    //        return new List<T> {obj};
-    //    }
-
-    //    public static ITwitterFacade SetupMockToReturnTweets(
-    //        this Mock<ITwitterFacade> mockFacade, string screenName, List<TwitterStatus> tweets)
-    //    {
-    //        if (tweets.Count < 1) throw new ArgumentException("should not be empty", nameof(tweets));
-
-    //        var firstTweet = tweets[0];
-    //        mockFacade.Setup(stf => stf.GetUserTimeLine(screenName)).Returns(firstTweet.AsList());
-
-    //        mockFacade.Setup(stf => stf.GetUserTimeLine(screenName, It.IsAny<ulong>()))
-    //            .Returns(
-    //                (string sn, ulong maxId) => tweets.OrderByDescending(t => t.Id).First(t => t.Id <= maxId).AsList());
-        
-    //        return mockFacade.Object;
-    //    }
-    //}
 }

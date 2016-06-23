@@ -19,9 +19,6 @@ namespace TweetCollector.Model
         [JsonConverter(typeof(TwitterDateTimeConverter))]
         public DateTimeOffset CreatedDateGmt { get; set; }
 
-        //[DataMember, JsonProperty(PropertyName = "source")]
-        //public string Source { get; set; }
-
         [DataMember, JsonProperty(PropertyName = "text")]
         public string Text { get; set; }
 

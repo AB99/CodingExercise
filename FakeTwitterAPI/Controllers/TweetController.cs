@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using TweetCollector.Model;
 
-namespace WebApplication1.Controllers
+namespace FakeTwitterAPI.Controllers
 {
     public class TweetController : ApiController
     {
@@ -32,22 +30,27 @@ namespace WebApplication1.Controllers
             }
         }
 
-        private List<TwitterStatus> _tweets;
+        private readonly List<TwitterStatus> _tweets;
+
+        //NB: I'm forcing "count" (the number of tweets returned per request) to 2, so that it exercises
+        //cursoring in the client
+        private const int Count = 2;
 
         public IEnumerable<TwitterStatus> Get(ulong max_id, string screen_name)
         {
             return _tweets.Where(t => t.User.ScreenName == screen_name && t.Id <= max_id)
                 .OrderByDescending(t => t.Id)
-                .Take(2);
+                .Take(Count);
         }
 
         public IEnumerable<TwitterStatus> Get(string screen_name)
         {
             return _tweets.Where(t => t.User.ScreenName == screen_name)
                 .OrderByDescending(t => t.Id)
-                .Take(2);
+                .Take(Count);
         }
 
+        #region helpers
 
         private static DateTimeOffset Today => DateTimeOffset.UtcNow;
 
@@ -69,5 +72,7 @@ namespace WebApplication1.Controllers
 
             return tweet;
         }
+
+        #endregion
     }
 }
