@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PayByPhoneCodingExercise", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TweetCollector", "TweetCollector\TweetCollector.csproj", "{6E93AE5A-0BA7-4484-ACA3-1F123AA20200}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TweetCollector.UnitTests", "TweetCollector.UnitTests\TweetCollector.UnitTests.csproj", "{2E5F5B2C-3752-4B8F-A1A7-CCDFB41D1003}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{6E93AE5A-0BA7-4484-ACA3-1F123AA20200}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E93AE5A-0BA7-4484-ACA3-1F123AA20200}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E93AE5A-0BA7-4484-ACA3-1F123AA20200}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E5F5B2C-3752-4B8F-A1A7-CCDFB41D1003}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E5F5B2C-3752-4B8F-A1A7-CCDFB41D1003}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E5F5B2C-3752-4B8F-A1A7-CCDFB41D1003}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E5F5B2C-3752-4B8F-A1A7-CCDFB41D1003}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
