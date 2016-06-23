@@ -6,9 +6,14 @@ namespace TweetCollector.Utility
 {
     public class TweetCollectorConfig : ITweetCollectorConfig
     {
-        readonly Configuration _config;
+        private Configuration _config;
 
-        public TweetCollectorConfig(string configFile = "TweetCollectorConfig.xml")
+        public void Init()
+        {
+            Init("TweetCollectorConfig.xml");
+        }
+
+        public void Init(string configFile)
         {
             var fileMap = new ExeConfigurationFileMap
             {

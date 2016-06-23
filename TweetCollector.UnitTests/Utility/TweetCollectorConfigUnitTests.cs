@@ -11,7 +11,8 @@ namespace TweetCollector.UnitTests
         [SetUp]
         public void Setup()
         {
-            _config = new TweetCollectorConfig("TweetCollectorTestConfig.xml");
+            _config = new TweetCollectorConfig();
+            _config.Init("TweetCollectorTestConfig.xml");
         }
 
         [Test]

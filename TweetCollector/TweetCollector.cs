@@ -7,7 +7,7 @@ using TweetCollector.Model;
 
 namespace TweetCollector
 {
-    public class TweetCollector
+    public class TweetCollector : ITweetCollector
     {
         private readonly ITwitterFacade _twitterFacade;
         private readonly string[] _screenNamesOfInterest = { "@pay_by_phone", "@PayByPhone", " @PayByPhone_UK" };
