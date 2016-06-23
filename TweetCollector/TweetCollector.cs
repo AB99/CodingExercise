@@ -23,7 +23,6 @@ namespace TweetCollector
             DateTimeOffset dateLimit = DateTimeOffset.UtcNow.AddDays(-14);
 
             //TODO: parallelize this
-            //TODO: use cursor technique
 
             foreach (string screenName in _screenNamesOfInterest)
             {
