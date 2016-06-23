@@ -12,16 +12,40 @@ namespace WebApplication1.Controllers
     {
         //TODO: add OAuth verification
 
-        // GET api/values
-        public IEnumerable<string> Get()
+        public TweetController()
         {
-            return new string[] { "value1", "value2" };
+            _tweets = new List<TwitterStatus>();
+
+            var namesOfInterest = new TweetCollector.TweetCollector(null).ScreenNamesOfInterest;
+
+            foreach (string name in namesOfInterest)
+            {
+                var tweetsForUser = new List<TwitterStatus>
+                {
+                    CreateTweet(2, Today.AddDays(-16), screenName: name, text: "I also mention @someUser"),
+                    CreateTweet(1, Today.AddDays(-18), screenName: name, text: "I mention no one"),
+                    CreateTweet(4, Today.AddDays(-2), screenName: name, text: "I mention @someUser"),
+                    CreateTweet(3, Today.AddDays(-13), screenName: name, text: "I also mention no one"),
+                };
+
+                _tweets.AddRange(tweetsForUser);
+            }
         }
 
-        // GET api/values/5
-        public string Get(int max_id, string screen_name)
+        private List<TwitterStatus> _tweets;
+
+        public IEnumerable<TwitterStatus> Get(ulong max_id, string screen_name)
         {
-            return "value";
+            return _tweets.Where(t => t.User.ScreenName == screen_name && t.Id <= max_id)
+                .OrderByDescending(t => t.Id)
+                .Take(2);
+        }
+
+        public IEnumerable<TwitterStatus> Get(string screen_name)
+        {
+            return _tweets.Where(t => t.User.ScreenName == screen_name)
+                .OrderByDescending(t => t.Id)
+                .Take(2);
         }
 
 
