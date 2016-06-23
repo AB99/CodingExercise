@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.Serialization.Json;
 using System.Web;
 using System.Web.Mvc;
+using Newtonsoft.Json;
 using PayByPhoneCodingExercise.Models;
 using TweetCollector;
 using TweetCollector.Model;
@@ -22,16 +23,12 @@ namespace PayByPhoneCodingExercise.Controllers
 
         public ActionResult Index()
         {
+            //TODO: this would be better done as an ajax call or something so that it doesn't hold up the view
             TwitterAggregate results = _tweetCollector.CollectTweetsForLastTwoWeeks();
 
-            MemoryStream stream1 = new MemoryStream();
-            DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(TwitterAggregate));
-            ser.WriteObject(stream1, results);
-
-            stream1.Position = 0;
-            StreamReader sr = new StreamReader(stream1);
-            var vm = new TweetsViewModel {TweetJson = sr.ReadToEnd()};
-
+            string stuff = JsonConvert.SerializeObject(results);
+            var vm = new TweetsViewModel { TweetJson = stuff };
+    
             return View(vm);
         }
 
