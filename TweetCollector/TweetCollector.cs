@@ -20,15 +20,19 @@ namespace TweetCollector
         public TwitterAggregate CollectTweetsForLastTwoWeeks()
         {
             var tweets = new List<TwitterStatus>();
+            DateTimeOffset dateLimit = DateTimeOffset.UtcNow.AddDays(-14);
+
+            //TODO: parallelize this
+            //TODO: use cursor technique
 
             foreach (string screenName in _screenNamesOfInterest)
             {
-                var userTimelineTweets = _twitterFacade.UserTimeLine(screenName);
+                var userTimelineTweets = GetUsersTimeLineForLastTwoWeeks(screenName, dateLimit);
                 tweets.AddRange(userTimelineTweets);
             }
 
             tweets = tweets
-                .Where(t => t.CreatedDateGmt >= DateTimeOffset.UtcNow.AddDays(-14))
+                .Where(t => t.CreatedDateGmt >= dateLimit)
                 .OrderByDescending(t => t.CreatedDateGmt).ToList();
 
             int tweetsMentioningUsersCount = tweets.Count(t => t.Text.Contains("@"));
@@ -41,6 +45,24 @@ namespace TweetCollector
             };
 
             return aggregate;
+        }
+
+        private List<TwitterStatus> GetUsersTimeLineForLastTwoWeeks(string screenName, DateTimeOffset dateLimit)
+        {
+            var tweets = new List<TwitterStatus>();
+
+            List<TwitterStatus> cursorTweets = _twitterFacade.GetUserTimeLine(screenName);
+            tweets.AddRange(cursorTweets.Where(t => t.CreatedDateGmt >= dateLimit));
+ 
+            while (!cursorTweets.Any(t => t.CreatedDateGmt < dateLimit) && cursorTweets.Any())
+            {
+                ulong maxId = cursorTweets.Min(t => t.Id);
+
+                cursorTweets = _twitterFacade.GetUserTimeLine(screenName, maxId-1);
+                tweets.AddRange(cursorTweets.Where(t => t.CreatedDateGmt >= dateLimit));
+            }
+
+            return tweets;
         }
     }
 }

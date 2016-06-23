@@ -19,10 +19,16 @@ namespace TweetCollector
         }
 
         //TODO: make this async
-        public List<TwitterStatus> UserTimeLine(string screenName)
+
+        public List<TwitterStatus> GetUserTimeLine(string screenName)
+        {
+            return GetUserTimeLine(screenName, 0);
+        }
+
+        public List<TwitterStatus> GetUserTimeLine(string screenName, ulong maxId)
         {
             var uri = new Uri(_config.TwitterApiUrl);
-            uri = AddQueryStringParametersToUri(uri, screenName);
+            uri = AddQueryStringParametersToUri(uri, screenName, maxId);
 
             HttpWebRequest request = CreateRequest(uri, _config.ConsumerKey, _config.ConsumerSecret);
 
@@ -57,15 +63,22 @@ namespace TweetCollector
         }
 
 
-        private static Uri AddQueryStringParametersToUri(Uri uri, string screenName)
+        private static Uri AddQueryStringParametersToUri(Uri uri, string screenName, ulong maxId)
         {
             var requestParametersBuilder = new StringBuilder(uri.AbsoluteUri);
             requestParametersBuilder.Append(uri.Query.Length == 0 ? "?" : "&");
 
             Dictionary<string, object> fieldsToInclude = new Dictionary<string, object>
             {
-                {"screen_name", screenName}
+                {"screen_name", screenName},
+                {"include_rts", "1"},
+                {"exclude_replies", "false"}
             };
+
+            if (maxId != 0)
+            {
+                fieldsToInclude.Add("max_id", maxId.ToString());
+            }
 
             foreach (KeyValuePair<string, object> item in fieldsToInclude)
             {

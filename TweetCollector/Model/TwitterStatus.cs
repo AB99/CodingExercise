@@ -12,7 +12,7 @@ namespace TweetCollector.Model
     public class TwitterStatus
     {
         [DataMember, JsonProperty(PropertyName = "id")]
-        public decimal Id { get; set; }
+        public ulong Id { get; set; }
 
         [DataMember]
         [JsonProperty(PropertyName = "created_at")]

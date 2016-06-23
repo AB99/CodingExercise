@@ -5,6 +5,7 @@ namespace TweetCollector
 {
     public interface ITwitterFacade
     {
-        List<TwitterStatus> UserTimeLine(string screenName);
+        List<TwitterStatus> GetUserTimeLine(string screenName);
+        List<TwitterStatus> GetUserTimeLine(string screenName, ulong maxId);
     }
 }
