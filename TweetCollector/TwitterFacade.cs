@@ -16,7 +16,6 @@ namespace TweetCollector
         public TwitterFacade(ITweetCollectorConfig config)
         {
             _config = config;
-            _config.Init();
         }
 
         //TODO: make this async

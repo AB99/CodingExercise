@@ -56,7 +56,6 @@
     <Compile Include="TweetCollector.cs" />
     <Compile Include="TwitterFacade.cs" />
     <Compile Include="Utility\ITweetCollectorConfig.cs" />
-    <Compile Include="Utility\TweetCollectorConfig.cs" />
     <Compile Include="Utility\TwitterDateTimeConverter.cs" />
   </ItemGroup>
   <ItemGroup>

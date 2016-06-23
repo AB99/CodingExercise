@@ -19,7 +19,7 @@ namespace PayByPhoneCodingExercise.Controllers
 
         public ActionResult Index()
         {
-            //TwitterAggregate results = _tweetCollector.CollectTweetsForLastTwoWeeks();
+            TwitterAggregate results = _tweetCollector.CollectTweetsForLastTwoWeeks();
             return View();
         }
 
