@@ -10,7 +10,7 @@ namespace TweetCollector
     public class TweetCollector : ITweetCollector
     {
         private readonly ITwitterFacade _twitterFacade;
-        private readonly string[] _screenNamesOfInterest = { "@pay_by_phone", "@PayByPhone", " @PayByPhone_UK" };
+        public string[] ScreenNamesOfInterest { get; set; } = {"@pay_by_phone", "@PayByPhone", " @PayByPhone_UK"};
 
         public TweetCollector(ITwitterFacade twitterFacade)
         {
@@ -24,7 +24,7 @@ namespace TweetCollector
 
             //TODO: parallelize this
 
-            foreach (string screenName in _screenNamesOfInterest)
+            foreach (string screenName in ScreenNamesOfInterest)
             {
                 var userTimelineTweets = GetUsersTimeLineForLastTwoWeeks(screenName, dateLimit);
                 tweets.AddRange(userTimelineTweets);
